@@ -281,7 +281,7 @@ export function ToolsPage({
             className="flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground"
           >
             <span className="text-lg font-semibold tracking-tight text-foreground">
-              <span className="text-[#7c6dfa]">Creator</span>AI
+              <span className="text-[#7c6dfa]">TaoX</span> AI
             </span>
           </button>
           <nav className="flex items-center gap-3 text-sm text-muted-foreground">

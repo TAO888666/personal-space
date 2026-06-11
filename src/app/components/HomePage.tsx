@@ -1,5 +1,7 @@
+import { useState, useRef } from "react";
 import { ArrowRight, Zap, Target, Layers, Star, TrendingUp } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
+import { AboutCard } from "./AboutCard";
 
 const FEATURED_TOOLS = [
   {
@@ -65,16 +67,32 @@ interface HomePageProps {
 }
 
 export function HomePage({ onGoToTools, isDark, onToggleTheme }: HomePageProps) {
+  const [showAbout, setShowAbout] = useState(false);
+  const aboutRef = useRef<HTMLDivElement>(null);
+
+  const handleAboutClick = () => {
+    const next = !showAbout;
+    setShowAbout(next);
+    if (next) {
+      setTimeout(() => aboutRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 50);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
       {/* Nav */}
       <header className="fixed top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <span className="text-lg font-semibold tracking-tight">
-            <span className="text-[#7c6dfa]">Creator</span>AI
+            <span className="text-[#7c6dfa]">TaoX</span> AI
           </span>
           <nav className="flex items-center gap-3 text-sm text-muted-foreground">
-            <a href="#about" className="hover:text-foreground transition-colors px-2">关于</a>
+            <button
+              onClick={handleAboutClick}
+              className={`px-2 transition-colors ${showAbout ? "text-[#7c6dfa]" : "hover:text-foreground"}`}
+            >
+              关于站长
+            </button>
             <ThemeToggle isDark={isDark} onToggle={onToggleTheme} />
             <button
               onClick={onGoToTools}
@@ -205,7 +223,7 @@ export function HomePage({ onGoToTools, isDark, onToggleTheme }: HomePageProps) 
       <section id="about" className="px-6 py-24 border-t border-border">
         <div className="mx-auto max-w-7xl">
           <div className="mb-16 text-center">
-            <p className="mb-2 font-mono text-xs tracking-widest text-[#7c6dfa] uppercase">Why CreatorAI</p>
+            <p className="mb-2 font-mono text-xs tracking-widest text-[#7c6dfa] uppercase">Why TaoX AI</p>
             <h2 className="text-3xl font-semibold tracking-tight text-foreground">
               我们的选工具哲学
             </h2>
@@ -227,6 +245,20 @@ export function HomePage({ onGoToTools, isDark, onToggleTheme }: HomePageProps) 
           </div>
         </div>
       </section>
+
+      {/* About — toggleable */}
+      <div
+        ref={aboutRef}
+        style={{
+          display: "grid",
+          gridTemplateRows: showAbout ? "1fr" : "0fr",
+          transition: "grid-template-rows 0.4s ease",
+        }}
+      >
+        <div style={{ overflow: "hidden" }}>
+          <AboutCard />
+        </div>
+      </div>
 
       {/* CTA */}
       <section className="px-6 py-24">
@@ -256,7 +288,7 @@ export function HomePage({ onGoToTools, isDark, onToggleTheme }: HomePageProps) 
       <footer className="border-t border-border px-6 py-8">
         <div className="mx-auto flex max-w-7xl items-center justify-between text-sm text-muted-foreground">
           <span className="font-semibold text-foreground">
-            <span className="text-[#7c6dfa]">Creator</span>AI
+            <span className="text-[#7c6dfa]">TaoX</span> AI
           </span>
           <span className="font-mono text-xs">© 2026 · 为创作者而生</span>
         </div>
