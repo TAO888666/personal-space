@@ -10,6 +10,7 @@ export interface Tool {
   users: string;
   image: string;
   imageLocal?: unknown; // imported local asset (Vite module)
+  review?: string; // 欧哥点评
   url: string;
   isNew?: boolean;
   isFeatured?: boolean;

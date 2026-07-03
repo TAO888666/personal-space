@@ -109,6 +109,19 @@ export function ToolModal({ tool, onClose }: ToolModalProps) {
           {/* Divider */}
           <div className="mb-6 border-t border-border" />
 
+          {/* 欧哥点评 */}
+          {tool.review && (
+            <div className="mb-6 rounded-xl border border-[#7c6dfa]/25 bg-[#7c6dfa]/8 px-5 py-4">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-[#7c6dfa]">💬</span>
+                <span className="text-xs font-mono font-semibold text-[#7c6dfa] uppercase tracking-wide">欧哥点评</span>
+              </div>
+              <p className="text-sm leading-relaxed text-foreground italic">
+                「{tool.review}」
+              </p>
+            </div>
+          )}
+
           {/* Description */}
           <div className="mb-6">
             <h3 className="mb-2 text-sm font-medium text-muted-foreground uppercase tracking-wide font-mono">工具介绍</h3>

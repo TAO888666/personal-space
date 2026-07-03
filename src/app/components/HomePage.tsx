@@ -74,7 +74,12 @@ export function HomePage({ onGoToTools, isDark, onToggleTheme }: HomePageProps) 
     const next = !showAbout;
     setShowAbout(next);
     if (next) {
-      setTimeout(() => aboutRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 50);
+      setTimeout(() => {
+        if (!aboutRef.current) return;
+        const rect = aboutRef.current.getBoundingClientRect();
+        const scrollTop = window.scrollY + rect.top - 80;
+        window.scrollTo({ top: scrollTop, behavior: "smooth" });
+      }, 350);
     }
   };
 

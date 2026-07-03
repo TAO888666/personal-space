@@ -9,6 +9,8 @@ import vibeImg from "../../imports/ChatGPT_Image_2026_6_11__12_11_32.png";
 import ObsidianImg from "../../imports/ChatGPT_Image_2026_6_11__12_25_26.png";
 import opendesignImg from "../../imports/ChatGPT_Image_2026_6_11__14_46_10.png";
 import collectionCenterImg from "../../imports/ChatGPT_Image_2026_6_11__15_45_43.png";
+import autoUploadImg from "../../imports/ChatGPT_Image_2026_6_22.png";
+import HtmlVideoImg from "../../imports/ChatGPT_Image_2026_7_3__12_11_41.png";
 
 const ALL_TOOLS: Tool[] = [
   {
@@ -24,6 +26,8 @@ const ALL_TOOLS: Tool[] = [
       "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e",
     url: "https://midjourney.com",
     isFeatured: true,
+    review:
+      "以前做自媒体配图要找素材、找设计师，现在一句话描述出图，省下的钱比会员费多十倍。",
   },
   {
     id: "2",
@@ -39,6 +43,8 @@ const ALL_TOOLS: Tool[] = [
     url: "https://runwayml.com",
     isNew: true,
     isFeatured: true,
+    review:
+      "拍了一段普通素材，用它加完特效发出去，粉丝以为我请了专业团队拍摄。",
   },
   {
     id: "3",
@@ -53,6 +59,8 @@ const ALL_TOOLS: Tool[] = [
       "https://images.unsplash.com/photo-1478737270239-2f02b77fc618",
     url: "https://elevenlabs.io",
     isFeatured: true,
+    review:
+      "不想出镜又想做视频？克隆自己的声音，让AI替你说话，听不出任何违和感。",
   },
   {
     id: "4",
@@ -66,6 +74,8 @@ const ALL_TOOLS: Tool[] = [
     image: "",
     imageLocal: vibeImg,
     url: "https://pan.quark.cn/s/63d94107daeb",
+    review:
+      "录完采访/会议直接扔进去，几分钟出字幕，不用联网不怕隐私泄露，手动转录的时代结束了。",
   },
   {
     id: "5",
@@ -80,6 +90,8 @@ const ALL_TOOLS: Tool[] = [
     imageLocal: video2xImg,
     url: "https://pan.quark.cn/s/742bc27e559f",
     isNew: true,
+    review:
+      "早年拍的低画质素材本来要废掉，丢进去跑一遍，直接变高清，省了重新拍的功夫。",
   },
   {
     id: "6",
@@ -93,6 +105,8 @@ const ALL_TOOLS: Tool[] = [
     image:
       "https://images.unsplash.com/photo-1697033300784-6c9d143a30e2",
     url: "https://canva.com",
+    review:
+      "不会PS也不会设计，但我做的封面总被人问是谁设计的——就是它。",
   },
   {
     id: "7",
@@ -107,6 +121,8 @@ const ALL_TOOLS: Tool[] = [
       "https://images.unsplash.com/photo-1741746239350-9021ddfa3d59",
     url: "https://udio.com",
     isNew: true,
+    review:
+      "视频背景音乐再也不用去买版权了，想要什么风格直接生成，完全免版权。",
   },
   {
     id: "8",
@@ -120,6 +136,8 @@ const ALL_TOOLS: Tool[] = [
     image: "",
     imageLocal: ObsidianImg,
     url: "https://pan.quark.cn/s/17b300580712",
+    review:
+      "选题、脚本、参考资料全部扔进去管理，再也不会出现「那个素材我存哪了」的情况。",
   },
   {
     id: "9",
@@ -134,6 +152,8 @@ const ALL_TOOLS: Tool[] = [
       "https://images.unsplash.com/photo-1550275994-cdc89cd1948f",
     url: "https://pika.art",
     isNew: true,
+    review:
+      "发一张产品图进去，出来一段动态视频，发小红书的转化率直接翻倍。",
   },
   {
     id: "10",
@@ -147,6 +167,8 @@ const ALL_TOOLS: Tool[] = [
     image: "",
     imageLocal: opendesignImg,
     url: "https://pan.quark.cn/s/58c7d9434869",
+    review:
+      "以前设计封面要开好几个软件来回切，现在一个搞定，创作者必备的瑞士军刀。",
   },
   {
     id: "11",
@@ -161,19 +183,22 @@ const ALL_TOOLS: Tool[] = [
       "https://images.unsplash.com/photo-1556196148-1fb724238998",
     url: "https://suno.com",
     isFeatured: true,
+    review:
+      "写一句歌词描述，一分钟生成一首完整的歌，我用它给视频做片头曲，粉丝以为我专门制作的。",
   },
   {
     id: "12",
-    name: "CapCut AI",
+    name: "AI一站式视频生成软件",
     description:
-      "面向短视频创作者的全能剪辑工具，AI自动字幕、智能剪辑、一键成片，是抖音创作者首选。",
+      "AI代码生成动画，只需给一个标题自动生成完整的短视频，一站式配音导出。",
     category: "视频编辑",
-    tags: ["短视频", "字幕", "剪辑"],
-    rating: 4.7,
+    tags: ["短视频", "创作", "AI"],
+    rating: 4.8,
     users: "5亿+",
-    image:
-      "https://images.unsplash.com/photo-1724862936518-ae7fcfc052c1",
-    url: "https://capcut.com",
+    image: "",
+    imageLocal: HtmlVideoImg,
+    url: "https://pan.quark.cn/s/d87945b725a7",
+    review: "非常适合文字展示类，科普讲解赛道，条条爆款。",
   },
   {
     id: "13",
@@ -189,12 +214,14 @@ const ALL_TOOLS: Tool[] = [
     url: "https://pan.quark.cn/s/7506cd1a62e7",
     isNew: true,
     isFeatured: true,
+    review:
+      "同时用好几个AI编程助手？一个工具统一管理，再也不用反复登录切换账号了。",
   },
   {
     id: "14",
     name: "Collection Center",
     description:
-      "本地运行的信息采集辅助工具，支持通过可视化界面配置采集任务，覆盖小红书、抖音、B站、知乎等主流平台，支持 JSON / CSV / Excel / SQLite 多格式导出，适合学习、研究与个人数据整理场景。",
+      "本地运行的信息采集辅助工具，可实时监控账号作品意向评论，覆盖小红书、抖音、B站、知乎等主流平台，适合学习、研究与个人数据整理场景。",
     category: "数据采集",
     tags: ["采集", "多平台", "数据导出"],
     rating: 4.8,
@@ -203,6 +230,8 @@ const ALL_TOOLS: Tool[] = [
     imageLocal: collectionCenterImg,
     url: "https://pan.quark.cn/s/2250fd28c409",
     isNew: true,
+    review:
+      "市面上卖你好几千的截流系统，它能实时监控账号作品评论区意向用户，仅供学习参考",
   },
   {
     id: "15",
@@ -213,10 +242,29 @@ const ALL_TOOLS: Tool[] = [
     tags: ["投屏", "Android", "批量控制"],
     rating: 4.9,
     users: "持续增长",
-    image: "https://images.unsplash.com/photo-1603969072881-b0fc7f3d77d7",
+    image:
+      "https://images.unsplash.com/photo-1603969072881-b0fc7f3d77d7",
     url: "https://pan.quark.cn/s/d2e9b80d3e87",
     isNew: true,
     isFeatured: true,
+    review:
+      "做手机矩阵的必备神器，500台手机一台电脑管，延迟低到感觉不出来是远程操控。",
+  },
+  {
+    id: "16",
+    name: "批量自动发布系统",
+    description:
+      "抖音快手小红书视频账号，四大平台自动发布，AI 生成标题文案。",
+    category: "批量发布",
+    tags: ["发布", "视频", "图文"],
+    rating: 4.9,
+    users: "持续增长",
+    image: "",
+    imageLocal: autoUploadImg,
+    url: "https://pan.quark.cn/s/75833354749d",
+    isFeatured: false,
+    review:
+      "不管是发多个平台还是多个账号，都能自动生成标题文案，视频量大，账号多的时候，终于不用自己写标题和文案，生成到自动发布一条链跑通，效率提升非常明显。",
   },
 ];
 
@@ -231,6 +279,7 @@ const CATEGORIES = [
   "编程开发",
   "数据采集",
   "设备管理",
+  "批量发布",
 ];
 
 interface ToolsPageProps {
