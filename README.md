@@ -1,11 +1,39 @@
+# TaoXAI Web
 
-  # 自媒体工具合集网站
+这是 TaoXAI 的前端仓库，使用 Vite + React。
 
-  This is a code bundle for 自媒体工具合集网站. The original project is available at https://www.figma.com/design/MrAXz5HNY9JjEXIuW1tWIb/%E8%87%AA%E5%AA%92%E4%BD%93%E5%B7%A5%E5%85%B7%E5%90%88%E9%9B%86%E7%BD%91%E7%AB%99.
+```text
+.
+└─ web/   前端代码，Vercel 部署目录
+```
 
-  ## Running the code
+## 本地运行
 
-  Run `npm i` to install the dependencies.
+```bash
+corepack pnpm install
+corepack pnpm dev
+```
 
-  Run `npm run dev` to start the development server.
-  
+## 构建
+
+```bash
+corepack pnpm build
+```
+
+## Vercel 设置
+
+- Root Directory: `web`
+- Build Command: `pnpm build`
+- Output Directory: `dist`
+
+## 不要提交
+
+```text
+.env
+node_modules/
+dist/
+支付宝/微信支付私钥和证书
+阿里云 AccessKey
+数据库连接地址和密码
+营业执照、身份证、备案资料原图
+```

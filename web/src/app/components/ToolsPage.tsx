@@ -3,6 +3,12 @@ import { Search, SlidersHorizontal, X } from "lucide-react";
 import { ToolCard, Tool } from "./ToolCard";
 import { ToolModal } from "./ToolModal";
 import { ThemeToggle } from "./ThemeToggle";
+import { AuthModal } from "./AuthModal";
+import { MembershipModal } from "./MembershipModal";
+import { MemberSuccessModal } from "./MemberSuccessModal";
+import { UserMenu } from "./UserMenu";
+import type { AuthUser } from "../App";
+import type { MemberTab } from "./MemberCenter";
 import ccSwitchImg from "../../imports/ChatGPT_Image_2026_6_10__12_00_16.png";
 import video2xImg from "../../imports/ChatGPT_Image_2026_6_11__11_43_39.png";
 import vibeImg from "../../imports/ChatGPT_Image_2026_6_11__12_11_32.png";
@@ -43,6 +49,7 @@ const ALL_TOOLS: Tool[] = [
     url: "https://runwayml.com",
     isNew: true,
     isFeatured: true,
+    memberOnly: true,
     review:
       "拍了一段普通素材，用它加完特效发出去，粉丝以为我请了专业团队拍摄。",
   },
@@ -59,6 +66,7 @@ const ALL_TOOLS: Tool[] = [
       "https://images.unsplash.com/photo-1478737270239-2f02b77fc618",
     url: "https://elevenlabs.io",
     isFeatured: true,
+    memberOnly: true,
     review:
       "不想出镜又想做视频？克隆自己的声音，让AI替你说话，听不出任何违和感。",
   },
@@ -152,6 +160,7 @@ const ALL_TOOLS: Tool[] = [
       "https://images.unsplash.com/photo-1550275994-cdc89cd1948f",
     url: "https://pika.art",
     isNew: true,
+    memberOnly: true,
     review:
       "发一张产品图进去，出来一段动态视频，发小红书的转化率直接翻倍。",
   },
@@ -198,6 +207,7 @@ const ALL_TOOLS: Tool[] = [
     image: "",
     imageLocal: HtmlVideoImg,
     url: "https://pan.quark.cn/s/d87945b725a7",
+    memberOnly: true,
     review: "非常适合文字展示类，科普讲解赛道，条条爆款。",
   },
   {
@@ -230,6 +240,7 @@ const ALL_TOOLS: Tool[] = [
     imageLocal: collectionCenterImg,
     url: "https://pan.quark.cn/s/2250fd28c409",
     isNew: true,
+    memberOnly: true,
     review:
       "市面上卖你好几千的截流系统，它能实时监控账号作品评论区意向用户，仅供学习参考",
   },
@@ -263,8 +274,22 @@ const ALL_TOOLS: Tool[] = [
     imageLocal: autoUploadImg,
     url: "https://pan.quark.cn/s/75833354749d",
     isFeatured: false,
+    memberOnly: true,
     review:
       "不管是发多个平台还是多个账号，都能自动生成标题文案，视频量大，账号多的时候，终于不用自己写标题和文案，生成到自动发布一条链跑通，效率提升非常明显。",
+  },
+  {
+    id: "17",
+    name: "AI音乐制作工作流",
+    description:
+      "完整的AI自媒体音乐内容创作工作流，从灵感到成品，覆盖作词、编曲、混音和分发全流程。",
+    category: "音乐创作",
+    tags: ["工作流", "音乐", "创作"],
+    rating: 4.6,
+    users: "即将开放",
+    image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d",
+    url: "#",
+    comingSoon: true,
   },
 ];
 
@@ -286,18 +311,30 @@ interface ToolsPageProps {
   onBack: () => void;
   isDark: boolean;
   onToggleTheme: () => void;
+  user: AuthUser | null;
+  onLogin: (user: AuthUser) => void;
+  onLogout: () => void;
+  onMemberUpgrade: (user: AuthUser) => void;
+  onGoToMember: (tab?: MemberTab) => void;
 }
+
+type ModalState = "none" | "auth" | "membership" | "memberSuccess";
 
 export function ToolsPage({
   onBack,
   isDark,
   onToggleTheme,
+  user,
+  onLogin,
+  onLogout,
+  onMemberUpgrade,
+  onGoToMember,
 }: ToolsPageProps) {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("全部");
-  const [selectedTool, setSelectedTool] = useState<Tool | null>(
-    null,
-  );
+  const [selectedTool, setSelectedTool] = useState<Tool | null>(null);
+  const [modal, setModal] = useState<ModalState>("none");
+  const hasActiveMembership = user?.membershipType === "annual" || user?.membershipType === "founder";
 
   const filtered = useMemo(() => {
     return ALL_TOOLS.filter((tool) => {
@@ -314,14 +351,62 @@ export function ToolsPage({
     });
   }, [search, activeCategory]);
 
+  function handleToolClick(tool: Tool) {
+    if (tool.comingSoon) return;
+    if (tool.memberOnly) {
+      if (!user) {
+        setModal("auth");
+        return;
+      }
+      if (!hasActiveMembership) {
+        setModal("membership");
+        return;
+      }
+    }
+    setSelectedTool(tool);
+  }
+
+  function handleLoginSuccess(authUser: AuthUser) {
+    onLogin(authUser);
+    setModal("none");
+  }
+
+  function handleUpgrade(authUser: AuthUser) {
+    onMemberUpgrade(authUser);
+    setModal("none");
+    setModal("memberSuccess");
+  }
+
   return (
     <div className="min-h-screen bg-background">
+      {/* Modals */}
       {selectedTool && (
         <ToolModal
           tool={selectedTool}
           onClose={() => setSelectedTool(null)}
         />
       )}
+      {modal === "auth" && (
+        <AuthModal
+          onClose={() => setModal("none")}
+          onSuccess={handleLoginSuccess}
+        />
+      )}
+      {modal === "membership" && (
+        <MembershipModal
+          onClose={() => setModal("none")}
+          onUpgradeSuccess={handleUpgrade}
+          isLoggedIn={!!user}
+          onLoginRequired={() => setModal("auth")}
+        />
+      )}
+      {modal === "memberSuccess" && (
+        <MemberSuccessModal
+          onStartUsing={() => setModal("none")}
+          onViewBenefits={() => setModal("none")}
+        />
+      )}
+
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
@@ -343,10 +428,25 @@ export function ToolsPage({
             <span className="text-foreground font-medium px-2">
               工具库
             </span>
-            <ThemeToggle
-              isDark={isDark}
-              onToggle={onToggleTheme}
-            />
+            <ThemeToggle isDark={isDark} onToggle={onToggleTheme} />
+            {user ? (
+              <UserMenu
+                phone={user.phone}
+                isMember={user.isMember}
+                membershipType={user.membershipType}
+                founderNumber={user.founderNumber}
+                onLogout={onLogout}
+                onOpenMembership={() => setModal("membership")}
+                onGoToMember={onGoToMember}
+              />
+            ) : (
+              <button
+                onClick={() => setModal("auth")}
+                className="rounded-full border border-border bg-secondary px-4 py-1.5 text-sm font-medium text-muted-foreground transition-all hover:border-[#7c6dfa]/40 hover:text-foreground"
+              >
+                登录
+              </button>
+            )}
           </nav>
         </div>
       </header>
@@ -414,7 +514,8 @@ export function ToolsPage({
               <ToolCard
                 key={tool.id}
                 tool={tool}
-                onClick={() => setSelectedTool(tool)}
+                isMember={hasActiveMembership}
+                onClick={() => handleToolClick(tool)}
               />
             ))}
           </div>

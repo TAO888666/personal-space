@@ -1,7 +1,13 @@
 import { useState, useRef } from "react";
-import { ArrowRight, Zap, Target, Layers, Star, TrendingUp } from "lucide-react";
+import { ArrowRight, Zap, Target, Layers, Star, TrendingUp, Check, Minus, Crown, Flame } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { AboutCard } from "./AboutCard";
+import { AuthModal } from "./AuthModal";
+import { MembershipModal } from "./MembershipModal";
+import { MemberSuccessModal } from "./MemberSuccessModal";
+import { UserMenu } from "./UserMenu";
+import type { AuthUser } from "../App";
+import type { MemberTab } from "./MemberCenter";
 
 const FEATURED_TOOLS = [
   {
@@ -60,14 +66,22 @@ const VALUES = [
   },
 ];
 
+type ModalState = "none" | "auth" | "membership" | "memberSuccess";
+
 interface HomePageProps {
   onGoToTools: () => void;
   isDark: boolean;
   onToggleTheme: () => void;
+  user: AuthUser | null;
+  onLogin: (user: AuthUser) => void;
+  onLogout: () => void;
+  onMemberUpgrade: (user: AuthUser) => void;
+  onGoToMember: (tab?: MemberTab) => void;
 }
 
-export function HomePage({ onGoToTools, isDark, onToggleTheme }: HomePageProps) {
+export function HomePage({ onGoToTools, isDark, onToggleTheme, user, onLogin, onLogout, onMemberUpgrade, onGoToMember }: HomePageProps) {
   const [showAbout, setShowAbout] = useState(false);
+  const [modal, setModal] = useState<ModalState>("none");
   const aboutRef = useRef<HTMLDivElement>(null);
 
   const handleAboutClick = () => {
@@ -83,8 +97,41 @@ export function HomePage({ onGoToTools, isDark, onToggleTheme }: HomePageProps) 
     }
   };
 
+  function handleLoginSuccess(authUser: AuthUser) {
+    onLogin(authUser);
+    setModal("none");
+  }
+
+  function handleUpgrade(authUser: AuthUser) {
+    onMemberUpgrade(authUser);
+    setModal("none");
+    setModal("memberSuccess");
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
+      {/* Modals */}
+      {modal === "auth" && (
+        <AuthModal
+          onClose={() => setModal("none")}
+          onSuccess={handleLoginSuccess}
+        />
+      )}
+      {modal === "membership" && (
+        <MembershipModal
+          onClose={() => setModal("none")}
+          onUpgradeSuccess={handleUpgrade}
+          isLoggedIn={!!user}
+          onLoginRequired={() => setModal("auth")}
+        />
+      )}
+      {modal === "memberSuccess" && (
+        <MemberSuccessModal
+          onStartUsing={() => setModal("none")}
+          onViewBenefits={() => setModal("none")}
+        />
+      )}
+
       {/* Nav */}
       <header className="fixed top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
@@ -99,6 +146,24 @@ export function HomePage({ onGoToTools, isDark, onToggleTheme }: HomePageProps) 
               关于站长
             </button>
             <ThemeToggle isDark={isDark} onToggle={onToggleTheme} />
+            {user ? (
+              <UserMenu
+                phone={user.phone}
+                isMember={user.isMember}
+                membershipType={user.membershipType}
+                founderNumber={user.founderNumber}
+                onLogout={onLogout}
+                onOpenMembership={() => setModal("membership")}
+                onGoToMember={onGoToMember}
+              />
+            ) : (
+              <button
+                onClick={() => setModal("auth")}
+                className="rounded-full border border-border bg-secondary px-4 py-1.5 text-sm font-medium text-muted-foreground transition-all hover:border-[#7c6dfa]/40 hover:text-foreground"
+              >
+                登录
+              </button>
+            )}
             <button
               onClick={onGoToTools}
               className="rounded-full bg-[#7c6dfa] px-4 py-1.5 text-sm font-medium text-white transition-all hover:bg-[#6c5de8] hover:shadow-[0_0_20px_rgba(124,109,250,0.4)]"
@@ -117,7 +182,7 @@ export function HomePage({ onGoToTools, isDark, onToggleTheme }: HomePageProps) 
           <div className="absolute right-1/4 bottom-1/3 h-[300px] w-[300px] rounded-full bg-violet-500/8 blur-[80px]" />
         </div>
 
-        {/* Grid overlay — color adapts to theme */}
+        {/* Grid overlay */}
         <div
           className="pointer-events-none absolute inset-0"
           style={{
@@ -248,6 +313,159 @@ export function HomePage({ onGoToTools, isDark, onToggleTheme }: HomePageProps) 
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Pricing */}
+      <section className="px-6 py-24 border-t border-border">
+        <div className="mx-auto max-w-5xl">
+          <div className="mb-14 text-center">
+            <p className="mb-2 font-mono text-xs tracking-widest text-[#7c6dfa] uppercase">Membership</p>
+            <h2 className="text-3xl font-semibold tracking-tight text-foreground">选择适合你的方案</h2>
+            <p className="mt-3 text-muted-foreground">
+              开通会员，解锁工具库、教程内容和社群权益
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
+            <div className="flex flex-col rounded-2xl border border-border bg-card p-6">
+              <div className="mb-6">
+                <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                  免费用户
+                </p>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-3xl font-bold text-foreground">¥0</span>
+                </div>
+                <p className="mt-2 text-sm text-muted-foreground">适合先体验工具库</p>
+              </div>
+
+              <div className="flex flex-1 flex-col gap-3 border-t border-border pt-5">
+                {[
+                  { text: "浏览免费工具", on: true },
+                  { text: "查看基础工具信息", on: true },
+                  { text: "体验部分公开内容", on: true },
+                  { text: "会员专属工具", on: false },
+                  { text: "教程内容", on: false },
+                  { text: "社群与项目分享", on: false },
+                ].map(({ text, on }) => (
+                  <div key={text} className="flex items-center gap-2.5">
+                    {on ? (
+                      <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-emerald-500/15">
+                        <Check size={10} className="text-emerald-500" />
+                      </div>
+                    ) : (
+                      <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-border">
+                        <Minus size={10} className="text-muted-foreground/40" />
+                      </div>
+                    )}
+                    <span className={`text-sm ${on ? "text-foreground" : "text-muted-foreground/50 line-through"}`}>
+                      {text}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              <button
+                onClick={onGoToTools}
+                className="mt-6 w-full rounded-xl border border-border py-3 text-sm font-medium text-muted-foreground transition-colors hover:border-[#7c6dfa]/25 hover:text-foreground"
+              >
+                免费使用
+              </button>
+            </div>
+
+            <div className="flex flex-col rounded-2xl border border-[#7c6dfa]/35 bg-card p-6">
+              <div className="mb-6">
+                <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-widest text-[#7c6dfa]">
+                  年会员
+                </p>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-xs text-muted-foreground">¥</span>
+                  <span className="text-3xl font-bold text-foreground">299</span>
+                  <span className="text-sm text-muted-foreground">/ 年</span>
+                </div>
+                <p className="mt-2 text-sm text-muted-foreground">适合持续使用 AI 工具的个人创作者</p>
+              </div>
+
+              <div className="flex flex-1 flex-col gap-3 border-t border-border pt-5">
+                {[
+                  "解锁全部会员工具",
+                  "工具库持续更新",
+                  "教程内容可查看",
+                  "会员身份有效期一年",
+                  "适合个人学习与创作提效",
+                ].map((text) => (
+                  <div key={text} className="flex items-center gap-2.5">
+                    <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#7c6dfa]/15">
+                      <Check size={10} className="text-[#7c6dfa]" />
+                    </div>
+                    <span className="text-sm text-foreground">{text}</span>
+                  </div>
+                ))}
+              </div>
+
+              <button
+                onClick={() => setModal(user ? "membership" : "auth")}
+                className="mt-6 w-full rounded-xl bg-[#7c6dfa] py-3 text-sm font-semibold text-white transition-all hover:bg-[#6c5de8] hover:shadow-[0_0_24px_rgba(124,109,250,0.38)]"
+              >
+                开通年会员
+              </button>
+            </div>
+
+            <div className="relative flex flex-col overflow-hidden rounded-2xl border border-amber-500/35 bg-card p-6">
+              <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-amber-500/70 via-amber-400/40 to-transparent" />
+              <div className="pointer-events-none absolute right-0 top-0 h-40 w-40 bg-amber-500/5 blur-[50px]" />
+
+              <div className="relative mb-6">
+                <div className="mb-3 flex flex-wrap gap-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/25 bg-amber-500/10 px-2.5 py-0.5 text-[11px] font-medium text-amber-500">
+                    <Crown size={10} />
+                    创始会员
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-red-500/20 bg-red-500/8 px-2.5 py-0.5 text-[11px] font-medium text-red-400">
+                    <Flame size={10} />
+                    限量 50 席
+                  </span>
+                </div>
+                <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-widest text-amber-500">
+                  创始会员
+                </p>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-xs text-muted-foreground">¥</span>
+                  <span className="text-3xl font-bold text-foreground">499</span>
+                </div>
+                <p className="mt-2 text-sm text-muted-foreground">适合早期深度用户和项目型创作者</p>
+              </div>
+
+              <div className="relative flex flex-1 flex-col gap-3 border-t border-border pt-5">
+                {[
+                  "当前工具库长期使用权",
+                  "已上线教程内容永久查看",
+                  "首年社群权益",
+                  "首年项目分享",
+                  "首年更新服务",
+                  "创始会员身份标识",
+                ].map((text) => (
+                  <div key={text} className="flex items-center gap-2.5">
+                    <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-amber-500/15">
+                      <Check size={10} className="text-amber-500" />
+                    </div>
+                    <span className="text-sm text-foreground">{text}</span>
+                  </div>
+                ))}
+              </div>
+
+              <button
+                onClick={() => setModal(user ? "membership" : "auth")}
+                className="relative mt-6 w-full rounded-xl border border-amber-500/40 bg-amber-500/10 py-3 text-sm font-semibold text-amber-500 transition-all hover:border-amber-500/60 hover:bg-amber-500/18"
+              >
+                抢占创始席位
+              </button>
+            </div>
+          </div>
+
+          <p className="mt-6 text-center text-xs leading-relaxed text-muted-foreground/50">
+            创始会员长期权益指当前工具库与已上线教程内容；未来独立课程、项目服务或高成本工具可能单独定价。
+          </p>
         </div>
       </section>
 

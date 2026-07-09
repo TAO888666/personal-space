@@ -1,17 +1,36 @@
 node_modules/
+**/node_modules/
+
 dist/
-build/
-.vite/
+**/dist/
 
 .env
 .env.*
+**/.env
+**/.env.*
 !.env.example
-
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+!**/.env.example
 
 .DS_Store
 Thumbs.db
+
+# 支付/云服务密钥与证书
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cert
+*.jks
+*private*
+*secret*
+*私钥*
+*公钥*
+*证书*
+
+# 个人/企业资料，不要提交
+*营业执照*
+*身份证*
+*承诺书*
+*备案*
+*授权书*
