@@ -1,12 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import { Crown, Settings, LogOut, ChevronDown, Gift, LayoutDashboard } from "lucide-react";
 import type { MemberTab } from "./MemberCenter";
+import type { AuthUser } from "../App";
+import { UserAvatar } from "./UserAvatar";
 
 interface UserMenuProps {
-  phone: string;
-  isMember: boolean;
-  membershipType?: "free" | "annual" | "founder";
-  founderNumber?: number | null;
+  user: AuthUser;
   onLogout: () => void;
   onOpenMembership: () => void;
   onGoToMember: (tab?: MemberTab) => void;
@@ -15,10 +14,6 @@ interface UserMenuProps {
 function maskPhone(phone: string) {
   if (phone.length !== 11) return phone;
   return phone.replace(/(\d{3})\d{4}(\d{4})/, "$1****$2");
-}
-
-function getInitial(phone: string) {
-  return phone.charAt(0) || "U";
 }
 
 function getMembershipLabel(membershipType?: "free" | "annual" | "founder", founderNumber?: number | null) {
@@ -34,17 +29,15 @@ function getMembershipLabel(membershipType?: "free" | "annual" | "founder", foun
 }
 
 export function UserMenu({
-  phone,
-  isMember,
-  membershipType,
-  founderNumber,
+  user,
   onLogout,
   onOpenMembership,
   onGoToMember,
 }: UserMenuProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const membershipLabel = getMembershipLabel(membershipType, founderNumber);
+  const membershipLabel = getMembershipLabel(user.membershipType, user.founderNumber);
+  const displayName = user.nickname?.trim() || maskPhone(user.phone);
 
   useEffect(() => {
     function handler(e: MouseEvent) {
@@ -61,15 +54,8 @@ export function UserMenu({
         className="flex items-center gap-2 rounded-full border border-border bg-secondary px-3 py-1.5 text-sm transition-all hover:border-[#7c6dfa]/30"
       >
         {/* Avatar */}
-        <div className="relative flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#7c6dfa] text-[11px] font-bold text-white">
-          {getInitial(phone)}
-          {isMember && (
-            <div className="absolute -bottom-0.5 -right-0.5 flex h-3 w-3 items-center justify-center rounded-full bg-amber-500">
-              <Crown size={7} className="text-white" />
-            </div>
-          )}
-        </div>
-        <span className="font-mono text-xs text-foreground">{maskPhone(phone)}</span>
+        <UserAvatar user={user} size="sm" showMemberBadge />
+        <span className="text-xs text-foreground">{displayName}</span>
         <ChevronDown
           size={12}
           className={`text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
@@ -82,12 +68,10 @@ export function UserMenu({
           {/* Header */}
           <div className="border-b border-border px-4 py-3">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#7c6dfa] text-sm font-bold text-white">
-                {getInitial(phone)}
-              </div>
+              <UserAvatar user={user} size="sm" />
               <div className="min-w-0">
-                <p className="truncate font-mono text-xs font-medium text-foreground">{maskPhone(phone)}</p>
-                {isMember ? (
+                <p className="truncate text-xs font-medium text-foreground">{displayName}</p>
+                {user.isMember ? (
                   <div className="mt-0.5 flex items-center gap-1">
                     <Crown size={9} className="text-amber-500" />
                     <span className="text-[10px] text-amber-500">{membershipLabel}</span>

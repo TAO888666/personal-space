@@ -15,6 +15,10 @@ export interface AuthUser {
   membershipStartedAt?: string | null;
   membershipExpiresAt?: string | null;
   founderNumber?: number | null;
+  nickname?: string | null;
+  avatarUrl?: string | null;
+  avatarColor?: string | null;
+  hasPassword?: boolean;
 }
 
 export default function App() {
@@ -72,6 +76,10 @@ export default function App() {
     setUser(authUser);
   }
 
+  function handleUserUpdate(authUser: AuthUser) {
+    setUser(authUser);
+  }
+
   function handleGoToMember(tab: MemberTab = "dashboard") {
     setMemberTab(tab);
     setPage("member");
@@ -84,6 +92,7 @@ export default function App() {
     onLogin: handleLogin,
     onLogout: handleLogout,
     onMemberUpgrade: handleMemberUpgrade,
+    onUserUpdate: handleUserUpdate,
     onGoToMember: handleGoToMember,
   };
 
@@ -97,6 +106,7 @@ export default function App() {
           onLogout={handleLogout}
           onGoToTools={() => setPage("tools")}
           onMemberUpgrade={handleMemberUpgrade}
+          onUserUpdate={handleUserUpdate}
           isDark={isDark}
           onToggleTheme={() => setIsDark((v) => !v)}
         />

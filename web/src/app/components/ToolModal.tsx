@@ -5,9 +5,10 @@ import { Tool } from "./ToolCard";
 interface ToolModalProps {
   tool: Tool;
   onClose: () => void;
+  onOpenTool: (tool: Tool) => void;
 }
 
-export function ToolModal({ tool, onClose }: ToolModalProps) {
+export function ToolModal({ tool, onClose, onOpenTool }: ToolModalProps) {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
     window.addEventListener("keydown", handler);
@@ -85,15 +86,14 @@ export function ToolModal({ tool, onClose }: ToolModalProps) {
         <div className="shrink-0 border-b border-border px-6 py-4 sm:px-8">
           <div className="mb-2 flex items-start justify-between gap-4">
             <h2 className="text-xl font-semibold leading-snug text-foreground">{tool.name}</h2>
-            <a
-              href={tool.url}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              type="button"
+              onClick={() => onOpenTool(tool)}
               className="shrink-0 flex items-center gap-2 rounded-full bg-[#7c6dfa] px-4 py-2 text-sm font-medium text-white transition-all hover:bg-[#6c5de8] hover:shadow-[0_0_20px_rgba(124,109,250,0.4)]"
             >
               立即使用
               <ExternalLink size={13} />
-            </a>
+            </button>
           </div>
           <div className="flex flex-wrap gap-4">
             <div className="flex items-center gap-1.5 text-sm">

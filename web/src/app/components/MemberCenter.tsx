@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {
-  LayoutDashboard, Gift, Settings, LogOut, Crown,
+  LayoutDashboard, Gift, Settings, LogOut,
   ArrowLeft, ChevronRight, Menu, X,
 } from "lucide-react";
 import { MemberDashboard } from "./member/MemberDashboard";
@@ -10,6 +10,7 @@ import { MembershipModal } from "./MembershipModal";
 import { MemberSuccessModal } from "./MemberSuccessModal";
 import { ThemeToggle } from "./ThemeToggle";
 import type { AuthUser } from "../App";
+import { UserAvatar } from "./UserAvatar";
 
 export type MemberTab = "dashboard" | "benefits" | "settings";
 
@@ -20,6 +21,7 @@ interface Props {
   onLogout: () => void;
   onGoToTools: () => void;
   onMemberUpgrade: (user: AuthUser) => void;
+  onUserUpdate: (user: AuthUser) => void;
   isDark: boolean;
   onToggleTheme: () => void;
 }
@@ -38,6 +40,10 @@ function getMembershipLabel(user: AuthUser) {
   }
 
   return "普通用户";
+}
+
+function getDisplayName(user: AuthUser) {
+  return user.nickname?.trim() || maskPhone(user.phone);
 }
 
 const NAV_ITEMS: { id: MemberTab; label: string; icon: typeof LayoutDashboard }[] = [
@@ -89,16 +95,9 @@ function Sidebar({
       {/* User info */}
       <div className="border-b border-border px-5 py-5">
         <div className="flex items-center gap-3">
-          <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#7c6dfa] text-base font-bold text-white">
-            {user.phone.charAt(0)}
-            {user.isMember && (
-              <div className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 shadow-sm">
-                <Crown size={9} className="text-white" />
-              </div>
-            )}
-          </div>
+          <UserAvatar user={user} size="md" showMemberBadge />
           <div className="min-w-0">
-            <p className="truncate font-mono text-sm font-medium text-foreground">{maskPhone(user.phone)}</p>
+            <p className="truncate text-sm font-medium text-foreground">{getDisplayName(user)}</p>
             <p className="mt-0.5 text-xs">
               {user.isMember ? (
                 <span className="text-amber-500">{getMembershipLabel(user)}</span>
@@ -155,6 +154,7 @@ export function MemberCenter({
   onLogout,
   onGoToTools,
   onMemberUpgrade,
+  onUserUpdate,
   isDark,
   onToggleTheme,
 }: Props) {
@@ -266,6 +266,7 @@ export function MemberCenter({
             {activeTab === "settings" && (
               <AccountSettings
                 user={user}
+                onUserUpdate={onUserUpdate}
                 onLogout={() => { onLogout(); onBack(); }}
               />
             )}

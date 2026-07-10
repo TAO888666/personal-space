@@ -148,10 +148,7 @@ export function HomePage({ onGoToTools, isDark, onToggleTheme, user, onLogin, on
             <ThemeToggle isDark={isDark} onToggle={onToggleTheme} />
             {user ? (
               <UserMenu
-                phone={user.phone}
-                isMember={user.isMember}
-                membershipType={user.membershipType}
-                founderNumber={user.founderNumber}
+                user={user}
                 onLogout={onLogout}
                 onOpenMembership={() => setModal("membership")}
                 onGoToMember={onGoToMember}

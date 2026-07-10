@@ -11,21 +11,21 @@ export interface Tool {
   image: string;
   imageLocal?: unknown; // imported local asset (Vite module)
   review?: string; // 欧哥点评
-  url: string;
   isNew?: boolean;
   isFeatured?: boolean;
-  memberOnly?: boolean;  // requires membership
+  requiresMember?: boolean;
   comingSoon?: boolean;  // not yet available
 }
 
 interface ToolCardProps {
   tool: Tool;
   onClick?: () => void;
+  onOpenTool?: () => void;
   isMember?: boolean;
 }
 
-export function ToolCard({ tool, onClick, isMember }: ToolCardProps) {
-  const isLocked = tool.memberOnly && !isMember;
+export function ToolCard({ tool, onClick, onOpenTool, isMember }: ToolCardProps) {
+  const isLocked = tool.requiresMember && !isMember;
   const isComing = tool.comingSoon;
 
   return (
@@ -68,7 +68,7 @@ export function ToolCard({ tool, onClick, isMember }: ToolCardProps) {
         </div>
 
         {/* Top-right: member badge */}
-        {tool.memberOnly && !tool.comingSoon && (
+        {tool.requiresMember && !tool.comingSoon && (
           <div className="absolute right-3 top-3">
             <span className="flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/15 px-2 py-0.5 font-mono text-[11px] font-medium text-amber-600 backdrop-blur-sm">
               <Crown size={9} />
@@ -95,15 +95,14 @@ export function ToolCard({ tool, onClick, isMember }: ToolCardProps) {
             {tool.name}
           </h3>
           {!isComing && (
-            <a
-              href={tool.url}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              type="button"
               className="shrink-0 rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-              onClick={(e) => { e.stopPropagation(); }}
+              onClick={(e) => { e.stopPropagation(); onOpenTool?.(); }}
+              aria-label={`打开 ${tool.name}`}
             >
               <ExternalLink size={14} />
-            </a>
+            </button>
           )}
         </div>
 
