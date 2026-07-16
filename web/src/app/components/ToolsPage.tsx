@@ -17,6 +17,7 @@ import opendesignImg from "../../imports/ChatGPT_Image_2026_6_11__14_46_10.png";
 import collectionCenterImg from "../../imports/ChatGPT_Image_2026_6_11__15_45_43.png";
 import autoUploadImg from "../../imports/ChatGPT_Image_2026_6_22.png";
 import HtmlVideoImg from "../../imports/ChatGPT_Image_2026_7_3__12_11_41.png";
+import aiCopyWorkbenchImg from "../../imports/ai-copy-workbench.png";
 
 const ALL_TOOLS: Tool[] = [
   {
@@ -263,16 +264,19 @@ const ALL_TOOLS: Tool[] = [
       "不管是发多个平台还是多个账号，都能自动生成标题文案，视频量大，账号多的时候，终于不用自己写标题和文案，生成到自动发布一条链跑通，效率提升非常明显。",
   },
   {
-    id: "ai-music-workflow",
-    name: "AI音乐制作工作流",
+    id: "ai-copy-workbench",
+    name: "AI文案工作台",
     description:
-      "完整的AI自媒体音乐内容创作工作流，从灵感到成品，覆盖作词、编曲、混音和分发全流程。",
-    category: "音乐创作",
-    tags: ["工作流", "音乐", "创作"],
-    rating: 4.6,
-    users: "即将开放",
-    image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d",
-    comingSoon: true,
+      "面向短视频运营和内容团队的AI文案提效工具，支持批量下载无水印视频与封面、提取文案，并完成文案分析、诊断、拆解和爆款框架复用。",
+    category: "文字创作",
+    tags: ["文案", "AI", "批量"],
+    rating: 4.8,
+    users: "持续增长",
+    image: "",
+    imageLocal: aiCopyWorkbenchImg,
+    requiresMember: true,
+    review:
+      "以前拆爆款要手工采集、下载、复制和归类，一条条做很耗时间。这个工作台把素材采集、文案提取、分析诊断和框架复用串成一条完整流程，特别适合短视频运营者沉淀自己的爆款文案资产。",
   },
 ];
 
